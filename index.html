@@ -1,248 +1,1245 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live Tech Search Engine — Daily Tech Digest</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #090d16;
-      --card-bg: rgba(17, 24, 39, 0.7);
-      --border: rgba(255, 255, 255, 0.08);
-      --accent: #38bdf8;
-      --accent-glow: rgba(56, 189, 248, 0.15);
-      --text: #f8fafc;
-      --muted: #94a3b8;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="description" content="A daily briefing of technology news, AI research, and engineering takeaways.">
+    <title>Daily Tech Digest — Your daily briefing</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --background: #0f172a;
+            --surface: rgba(30, 41, 59, 0.72);
+            --surface-strong: rgba(30, 41, 59, 0.94);
+            --border: rgba(148, 163, 184, 0.14);
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --cyan: #67e8f9;
+            --blue: #60a5fa;
+            --green: #4ade80;
+            --shadow: 0 24px 70px rgba(2, 8, 23, 0.34);
+        }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      padding: 2rem 1rem;
-      min-height: 100vh;
-    }
+        * {
+            box-sizing: border-box;
+        }
 
-    .container { max-width: 1100px; margin: 0 auto; }
+        body {
+            min-width: 320px;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text);
+            background:
+                radial-gradient(ellipse at 12% 0%, rgba(8, 145, 178, 0.16), transparent 34rem),
+                radial-gradient(ellipse at 92% 18%, rgba(37, 99, 235, 0.13), transparent 32rem),
+                var(--background);
+            font-family: Inter, "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.25rem 1.5rem;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      backdrop-filter: blur(12px);
-      margin-bottom: 2rem;
-    }
+        button,
+        input {
+            font: inherit;
+        }
 
-    .brand { font-weight: 700; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
-    .status-badge {
-      font-size: 0.8rem;
-      color: #34d399;
-      background: rgba(52, 211, 153, 0.1);
-      padding: 0.3rem 0.7rem;
-      border-radius: 20px;
-      border: 1px solid rgba(52, 211, 153, 0.2);
-    }
+        button:focus-visible,
+        input:focus-visible,
+        a:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 3px;
+        }
 
-    .search-container { margin-bottom: 1.5rem; }
+        .page-shell {
+            width: min(1120px, calc(100% - 48px));
+            margin: 0 auto;
+        }
 
-    .search-box-wrap {
-      display: flex;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-    }
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 26px 0;
+        }
 
-    .search-input {
-      flex: 1;
-      padding: 0.9rem 1.25rem;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      color: var(--text);
-      font-size: 1rem;
-      outline: none;
-      transition: 0.2s;
-    }
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #e2e8f0;
+            font-size: 0.92rem;
+            font-weight: 650;
+            letter-spacing: -0.02em;
+            text-decoration: none;
+        }
 
-    .search-input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-glow);
-    }
+        .brand-mark {
+            display: grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            border: 1px solid rgba(103, 232, 249, 0.28);
+            border-radius: 11px;
+            background: rgba(8, 145, 178, 0.12);
+            box-shadow: 0 0 24px rgba(34, 211, 238, 0.1);
+        }
 
-    .btn {
-      padding: 0.9rem 1.5rem;
-      background: var(--accent);
-      color: #000;
-      font-weight: 700;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+        .topbar-note {
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
 
-    .btn:hover { opacity: 0.9; }
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 58px 54px 52px;
+            border: 1px solid var(--border);
+            border-radius: 26px;
+            background:
+                linear-gradient(115deg, rgba(15, 23, 42, 0.32), rgba(15, 23, 42, 0.04)),
+                var(--surface);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+        }
 
-    .hashtags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .hero::after {
+            position: absolute;
+            top: -150px;
+            right: -75px;
+            width: 390px;
+            height: 390px;
+            border: 1px solid rgba(103, 232, 249, 0.09);
+            border-radius: 50%;
+            box-shadow: 0 0 0 44px rgba(103, 232, 249, 0.025), 0 0 0 88px rgba(96, 165, 250, 0.025);
+            content: "";
+            pointer-events: none;
+        }
 
-    .tag-btn {
-      background: rgba(30, 41, 59, 0.6);
-      border: 1px solid var(--border);
-      color: var(--accent);
-      padding: 0.35rem 0.8rem;
-      border-radius: 20px;
-      font-size: 0.82rem;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.2s;
-    }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 720px;
+        }
 
-    .tag-btn:hover { background: var(--accent); color: #000; }
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 8px 12px;
+            border: 1px solid rgba(103, 232, 249, 0.19);
+            border-radius: 999px;
+            background: rgba(8, 145, 178, 0.1);
+            color: #a5f3fc;
+            font-size: 0.76rem;
+            font-weight: 650;
+            letter-spacing: 0.055em;
+            text-transform: uppercase;
+        }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-    }
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 12px rgba(74, 222, 128, 0.8);
+        }
 
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      padding: 1.5rem;
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.2s, border-color 0.2s;
-    }
+        h1 {
+            margin: 22px 0 12px;
+            font-size: clamp(2.35rem, 6vw, 4.25rem);
+            font-weight: 760;
+            letter-spacing: -0.065em;
+            line-height: 1.04;
+        }
 
-    .card:hover {
-      transform: translateY(-3px);
-      border-color: rgba(56, 189, 248, 0.3);
-    }
+        h1 .title-accent {
+            color: var(--cyan);
+            text-shadow: 0 0 36px rgba(34, 211, 238, 0.2);
+        }
 
-    .card-hashtag {
-      font-size: 0.75rem;
-      color: var(--accent);
-      font-weight: 700;
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-    }
+        .hero-copy {
+            max-width: 620px;
+            margin: 0;
+            color: #aebdd0;
+            font-size: 1.03rem;
+            line-height: 1.75;
+        }
 
-    .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.75rem; line-height: 1.4; }
-    .card-snippet { font-size: 0.88rem; color: var(--muted); margin-bottom: 1rem; line-height: 1.5; }
-    .card-link { color: var(--accent); text-decoration: none; font-size: 0.85rem; font-weight: 600; }
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 22px;
+            margin-top: 27px;
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
 
-    .loader { text-align: center; padding: 3rem; color: var(--muted); grid-column: 1 / -1; }
+        .hero-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-    footer {
-      text-align: center;
-      margin-top: 3rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
-  </style>
+        .meta-icon {
+            color: var(--blue);
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin: 30px 0 22px;
+        }
+
+        .search-wrap {
+            position: relative;
+            flex: 1;
+            max-width: 450px;
+        }
+
+        .search-icon {
+            position: absolute;
+            top: 50%;
+            left: 16px;
+            color: #64748b;
+            font-size: 1rem;
+            pointer-events: none;
+            transform: translateY(-50%);
+        }
+
+        .search-input {
+            width: 100%;
+            min-height: 48px;
+            padding: 0 16px 0 44px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: rgba(15, 23, 42, 0.58);
+            color: var(--text);
+            transition: border-color 160ms ease, box-shadow 160ms ease;
+        }
+
+        .search-input::placeholder {
+            color: #64748b;
+        }
+
+        .search-input:focus {
+            border-color: rgba(103, 232, 249, 0.52);
+            box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.08);
+            outline: none;
+        }
+
+        .toolbar-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 9px;
+        }
+
+        .button {
+            display: inline-flex;
+            min-height: 44px;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: rgba(30, 41, 59, 0.74);
+            color: #dbeafe;
+            cursor: pointer;
+            font-size: 0.84rem;
+            font-weight: 620;
+            transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+        }
+
+        .button:hover:not(:disabled) {
+            transform: translateY(-1px);
+            border-color: rgba(103, 232, 249, 0.35);
+            background: rgba(51, 65, 85, 0.8);
+        }
+
+        .button-primary {
+            border-color: rgba(34, 211, 238, 0.34);
+            background: linear-gradient(135deg, rgba(8, 145, 178, 0.24), rgba(37, 99, 235, 0.2));
+            color: #cffafe;
+        }
+
+        .button:disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+        }
+
+        .results-line {
+            display: flex;
+            min-height: 24px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 0 2px 12px;
+            color: var(--muted);
+            font-size: 0.79rem;
+        }
+
+        .results-line strong {
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+
+        .digest-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            align-items: start;
+        }
+
+        .card {
+            min-width: 0;
+            padding: 24px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--surface);
+            box-shadow: 0 16px 42px rgba(2, 8, 23, 0.18);
+            backdrop-filter: blur(16px);
+            transition: border-color 180ms ease, transform 180ms ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(103, 232, 249, 0.22);
+        }
+
+        .card-heading {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            display: grid;
+            flex: 0 0 40px;
+            width: 40px;
+            height: 40px;
+            place-items: center;
+            border: 1px solid rgba(96, 165, 250, 0.17);
+            border-radius: 13px;
+            background: rgba(37, 99, 235, 0.12);
+            font-size: 1.08rem;
+        }
+
+        .card-eyebrow {
+            margin: 1px 0 5px;
+            color: #7dd3fc;
+            font-size: 0.69rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            margin: 0;
+            color: #f1f5f9;
+            font-size: 1.08rem;
+            font-weight: 680;
+            letter-spacing: -0.025em;
+            line-height: 1.4;
+        }
+
+        .card-content {
+            color: #b6c4d6;
+            font-size: 0.9rem;
+            line-height: 1.72;
+        }
+
+        .summary-copy {
+            margin: 0;
+            color: #cbd5e1;
+            line-height: 1.8;
+        }
+
+        .takeaway-list {
+            display: grid;
+            gap: 11px;
+            margin-top: 20px;
+        }
+
+        .takeaway {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px 13px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.42);
+            color: #cbd5e1;
+            font-size: 0.82rem;
+            line-height: 1.55;
+        }
+
+        .takeaway-mark {
+            color: var(--cyan);
+            font-weight: 800;
+        }
+
+        .entry-list {
+            display: grid;
+            gap: 13px;
+        }
+
+        .digest-entry {
+            padding: 15px 15px 14px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 14px;
+            background: rgba(15, 23, 42, 0.4);
+        }
+
+        .story-link {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .story-link:hover {
+            color: var(--cyan);
+        }
+
+        .story-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-top: 11px;
+            color: var(--muted);
+            font-size: 0.74rem;
+        }
+
+        .story-tag {
+            padding: 3px 8px;
+            border: 1px solid rgba(103, 232, 249, 0.18);
+            border-radius: 999px;
+            background: rgba(8, 145, 178, 0.1);
+            color: #a5f3fc;
+            font-size: 0.68rem;
+            font-weight: 650;
+        }
+
+        .loading-state,
+        .feed-error {
+            padding: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 14px;
+            background: rgba(15, 23, 42, 0.4);
+            color: #aebdd0;
+            font-size: 0.84rem;
+        }
+
+        .loading-label {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin: 0 0 14px;
+        }
+
+        .loading-spinner {
+            width: 15px;
+            height: 15px;
+            border: 2px solid rgba(103, 232, 249, 0.24);
+            border-top-color: var(--cyan);
+            border-radius: 50%;
+            animation: spin 750ms linear infinite;
+        }
+
+        .skeleton-stack {
+            display: grid;
+            gap: 9px;
+        }
+
+        .skeleton-line {
+            height: 11px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(51, 65, 85, 0.48), rgba(71, 85, 105, 0.72), rgba(51, 65, 85, 0.48));
+            background-size: 200% 100%;
+            animation: shimmer 1.4s ease-in-out infinite;
+        }
+
+        .skeleton-line:nth-child(2) {
+            width: 72%;
+        }
+
+        .feed-error p {
+            margin: 0 0 12px;
+            line-height: 1.6;
+        }
+
+        .retry-button {
+            min-height: 36px;
+            padding: 0 12px;
+            border: 1px solid rgba(103, 232, 249, 0.28);
+            border-radius: 10px;
+            background: rgba(8, 145, 178, 0.14);
+            color: #cffafe;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 620;
+        }
+
+        .retry-button:hover {
+            background: rgba(8, 145, 178, 0.24);
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes shimmer {
+            to {
+                background-position: -200% 0;
+            }
+        }
+
+        .digest-entry[hidden],
+        .summary-wrap[hidden] {
+            display: none;
+        }
+
+        .entry-title {
+            margin: 0 0 7px;
+            color: #e2e8f0;
+            font-size: 0.91rem;
+            font-weight: 650;
+            line-height: 1.52;
+        }
+
+        .entry-summary {
+            margin: 0;
+            color: #9fb0c5;
+            font-size: 0.82rem;
+            line-height: 1.65;
+        }
+
+        .entry-source {
+            display: inline-flex;
+            margin-top: 10px;
+            color: #7dd3fc;
+            font-size: 0.78rem;
+            font-weight: 620;
+            text-decoration: none;
+        }
+
+        .entry-source:hover {
+            color: #cffafe;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .empty-state {
+            display: none;
+            padding: 18px 12px;
+            color: var(--muted);
+            font-size: 0.84rem;
+            text-align: center;
+        }
+
+        .empty-state.is-visible {
+            display: block;
+        }
+
+        .notice {
+            display: none;
+            margin: 0 0 18px;
+            padding: 14px 16px;
+            border: 1px solid rgba(248, 113, 113, 0.24);
+            border-radius: 13px;
+            background: rgba(127, 29, 29, 0.16);
+            color: #fecaca;
+            font-size: 0.88rem;
+            line-height: 1.55;
+        }
+
+        .notice.is-visible {
+            display: block;
+        }
+
+        .footer {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 30px 2px 36px;
+            color: #718198;
+            font-size: 0.78rem;
+        }
+
+        .footer a {
+            color: #9fb0c5;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: var(--cyan);
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        @media (max-width: 760px) {
+            .page-shell {
+                width: min(100% - 32px, 600px);
+            }
+
+            .hero {
+                padding: 42px 28px 36px;
+            }
+
+            .hero::after {
+                right: -240px;
+            }
+
+            .toolbar {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .search-wrap {
+                max-width: none;
+            }
+
+            .toolbar-actions {
+                justify-content: flex-start;
+            }
+
+            .digest-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+        }
+
+        @media (max-width: 460px) {
+            .page-shell {
+                width: calc(100% - 24px);
+            }
+
+            .topbar {
+                padding: 18px 0;
+            }
+
+            .topbar-note {
+                max-width: 120px;
+                text-align: right;
+            }
+
+            .hero {
+                padding: 34px 22px 30px;
+                border-radius: 21px;
+            }
+
+            h1 {
+                font-size: 2.45rem;
+            }
+
+            .hero-copy {
+                font-size: 0.93rem;
+            }
+
+            .button {
+                flex: 1 1 auto;
+                padding: 0 11px;
+                font-size: 0.78rem;
+            }
+
+            .card {
+                padding: 19px;
+                border-radius: 17px;
+            }
+
+            .footer {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .loading-spinner,
+            .skeleton-line {
+                animation: none;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="page-shell">
+        <header class="topbar">
+            <a class="brand" href="./" aria-label="Daily Tech Digest home">
+                <span class="brand-mark" aria-hidden="true">✦</span>
+                <span>Daily Tech Digest</span>
+            </a>
+            <span class="topbar-note">Your signal in a noisy tech world</span>
+        </header>
 
-  <div class="container">
-    <header>
-      <div class="brand">⚡ Live Tech Search Engine</div>
-      <div class="status-badge">● Live Web Stream Active</div>
-    </header>
+        <main>
+            <section class="hero" aria-labelledby="page-title">
+                <div class="hero-content">
+                    <span class="live-badge"><span class="live-dot" aria-hidden="true"></span>Live Tech Digest</span>
+                    <h1 id="page-title"><span class="title-accent">🚀 Daily</span> Tech Digest</h1>
+                    <p class="hero-copy">A thoughtful daily briefing of the ideas, launches, and research moving technology forward. Catch up in minutes, keep the insights that matter.</p>
+                    <div class="hero-meta">
+                        <span><span class="meta-icon" aria-hidden="true">◷</span><span id="digest-date">Finding the latest edition…</span></span>
+                        <span><span class="meta-icon" aria-hidden="true">●</span><span id="live-status" role="status" aria-live="polite">Checking for updates</span></span>
+                    </div>
+                </div>
+            </section>
 
-    <div class="search-container">
-      <div class="search-box-wrap">
-        <input type="text" id="searchInput" class="search-input" placeholder="Search topic (e.g. LLM, Tesla, AI, WebDev)..." onkeydown="if(event.key==='Enter') executeLiveSearch()">
-        <button class="btn" onclick="executeLiveSearch()">Search News</button>
-      </div>
+            <section class="toolbar" aria-label="Digest tools">
+                <label class="search-wrap">
+                    <span class="search-icon" aria-hidden="true">⌕</span>
+                    <input class="search-input" id="digest-search" type="search" placeholder="Search stories, topics, or research…" autocomplete="off" aria-label="Search digest stories">
+                </label>
+                <div class="toolbar-actions">
+                    <button class="button" id="previous-button" type="button" disabled><span aria-hidden="true">←</span> Previous digest</button>
+                    <button class="button" id="latest-button" type="button" disabled><span aria-hidden="true">↗</span> Latest digest</button>
+                    <button class="button" id="refresh-button" type="button"><span aria-hidden="true">↻</span> Refresh</button>
+                    <button class="button button-primary" id="copy-button" type="button" disabled><span aria-hidden="true">▢</span> Copy digest</button>
+                </div>
+            </section>
 
-      <div class="hashtags">
-        <span style="font-size: 0.85rem; color: var(--muted); margin-right: 0.3rem;">Trending:</span>
-        <button class="tag-btn" onclick="quickSearch('AI')">#AI</button>
-        <button class="tag-btn" onclick="quickSearch('LLM')">#LLM</button>
-        <button class="tag-btn" onclick="quickSearch('Tesla')">#Tesla</button>
-        <button class="tag-btn" onclick="quickSearch('WebDev')">#WebDev</button>
-        <button class="tag-btn" onclick="quickSearch('Cybersecurity')">#Cybersecurity</button>
-      </div>
-    </div>
-
-    <div id="resultsGrid" class="grid">
-      <div class="loader">Loading live tech updates...</div>
-    </div>
-
-    <footer>
-      Built by Kartik Bhati • Realtime News Search Engine
-    </footer>
-  </div>
-
-  <script>
-    async function executeLiveSearch() {
-      const query = document.getElementById('searchInput').value.trim();
-      if (!query) return;
-
-      const grid = document.getElementById('resultsGrid');
-      grid.innerHTML = `<div class="loader">Searching live news for "<b>${query}</b>"...</div>`;
-
-      try {
-        // Reliable CORS Proxy + Google News RSS Fetching
-        const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=en-US&gl=US&ceid=US:en`;
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
-        
-        const response = await fetch(proxyUrl);
-        const data = await response.json();
-        
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(data.contents, "text/xml");
-        const items = Array.from(xmlDoc.querySelectorAll("item"));
-
-        if (items.length > 0) {
-          renderSearchResults(items, query);
-        } else {
-          grid.innerHTML = `<div class="loader">No live news found for "${query}". Try another term.</div>`;
-        }
-      } catch (err) {
-        console.error(err);
-        grid.innerHTML = `<div class="loader" style="color: #ef4444;">Failed to load live search results. Please try again.</div>`;
-      }
-    }
-
-    function renderSearchResults(items, query) {
-      const grid = document.getElementById('resultsGrid');
-      grid.innerHTML = items.slice(0, 12).map(item => {
-        const title = item.querySelector("title")?.textContent || "No Title";
-        const link = item.querySelector("link")?.textContent || "#";
-        const pubDateText = item.querySelector("pubDate")?.textContent;
-        const pubDate = pubDateText ? new Date(pubDateText).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recent';
-
-        return `
-          <div class="card">
-            <div>
-              <div class="card-hashtag">#${query.toUpperCase().replace(/\s+/g, '')} • ${pubDate}</div>
-              <div class="card-title">${title}</div>
+            <div class="results-line" aria-live="polite">
+                <span id="results-count">Loading your briefing…</span>
+                <strong id="search-feedback"></strong>
             </div>
-            <a href="${link}" target="_blank" rel="noopener" class="card-link">Read Source Article →</a>
-          </div>
-        `;
-      }).join('');
-    }
+            <div class="notice" id="load-notice" role="alert"></div>
 
-    function quickSearch(tag) {
-      document.getElementById('searchInput').value = tag;
-      executeLiveSearch();
-    }
+            <section class="digest-grid" aria-label="Today's digest">
+                <article class="card" data-card>
+                    <div class="card-heading">
+                        <span class="card-icon" aria-hidden="true">✦</span>
+                        <div>
+                            <p class="card-eyebrow">The big picture</p>
+                            <h2>Key Highlights &amp; Takeaways</h2>
+                        </div>
+                    </div>
+                    <div class="card-content summary-wrap" id="summary-wrap">
+                        <p class="summary-copy" id="executive-summary">The latest edition's key ideas will appear here as soon as the digest is ready.</p>
+                        <div class="takeaway-list" id="takeaway-list"></div>
+                    </div>
+                </article>
 
-    // Default Load
-    quickSearch('AI');
-  </script>
+                <article class="card" data-card>
+                    <div class="card-heading">
+                        <span class="card-icon" aria-hidden="true">◈</span>
+                        <div>
+                            <p class="card-eyebrow">What's happening</p>
+                            <h2>Today's AI &amp; Tech News Summaries</h2>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="entry-list" id="storiesContainer" aria-live="polite"></div>
+                        <div class="empty-state" id="news-empty">No news stories match your search.</div>
+                    </div>
+                </article>
+
+                <article class="card" data-card>
+                    <div class="card-heading">
+                        <span class="card-icon" aria-hidden="true">⌘</span>
+                        <div>
+                            <p class="card-eyebrow">Ideas in motion</p>
+                            <h2>Recent Code &amp; Research Updates</h2>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="entry-list" id="research-list"></div>
+                        <div class="empty-state" id="research-empty">No research updates match your search.</div>
+                    </div>
+                </article>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <span>Built with curiosity by <a href="https://github.com/KARTIKBHATI2007-alt" target="_blank" rel="noopener noreferrer">Kartik Bhati</a></span>
+            <nav class="footer-links" aria-label="Footer">
+                <a href="https://github.com/KARTIKBHATI2007-alt/daily-tech-digest" target="_blank" rel="noopener noreferrer">View repository ↗</a>
+                <span id="footer-timestamp">Updated just now</span>
+            </nav>
+        </footer>
+    </div>
+
+    <script>
+        (() => {
+            const HACKER_NEWS_API = "https://hacker-news.firebaseio.com/v0/";
+            const LIVE_STORY_LIMIT = 10;
+            const MAX_LOOKBACK_DAYS = 30;
+            const MAX_HISTORY_DAYS = 365;
+            const elements = {
+                copy: document.getElementById("copy-button"),
+                date: document.getElementById("digest-date"),
+                executiveSummary: document.getElementById("executive-summary"),
+                footerTimestamp: document.getElementById("footer-timestamp"),
+                latest: document.getElementById("latest-button"),
+                liveStatus: document.getElementById("live-status"),
+                loadNotice: document.getElementById("load-notice"),
+                newsEmpty: document.getElementById("news-empty"),
+                previous: document.getElementById("previous-button"),
+                refresh: document.getElementById("refresh-button"),
+                researchEmpty: document.getElementById("research-empty"),
+                researchList: document.getElementById("research-list"),
+                resultsCount: document.getElementById("results-count"),
+                search: document.getElementById("digest-search"),
+                searchFeedback: document.getElementById("search-feedback"),
+                summaryWrap: document.getElementById("summary-wrap"),
+                takeaways: document.getElementById("takeaway-list"),
+                storiesContainer: document.getElementById("storiesContainer")
+            };
+            let currentDate = null;
+            let latestDate = null;
+            let currentMarkdown = "";
+            let liveStories = [];
+            let researchEntries = [];
+            let totalEntries = 0;
+
+            function dateString(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, "0");
+                const day = String(date.getDate()).padStart(2, "0");
+                return `${year}-${month}-${day}`;
+            }
+
+            function shiftDate(value, days) {
+                const date = new Date(`${value}T12:00:00`);
+                date.setDate(date.getDate() + days);
+                return dateString(date);
+            }
+
+            function formatDate(value) {
+                return new Intl.DateTimeFormat(undefined, {
+                    dateStyle: "long",
+                    timeZone: "UTC"
+                }).format(new Date(`${value}T12:00:00Z`));
+            }
+
+            function formatStoryDate(value) {
+                return new Intl.DateTimeFormat(undefined, {
+                    dateStyle: "medium",
+                    timeZone: "UTC"
+                }).format(value);
+            }
+
+            async function fetchHackerNewsStories() {
+                const idsResponse = await fetch(`${HACKER_NEWS_API}topstories.json`, { cache: "no-store" });
+                if (!idsResponse.ok) {
+                    throw new Error(`Hacker News returned HTTP ${idsResponse.status} while loading top stories.`);
+                }
+                const ids = await idsResponse.json();
+                if (!Array.isArray(ids)) {
+                    throw new Error("Hacker News returned an invalid top stories response.");
+                }
+
+                const stories = await Promise.all(ids.slice(0, LIVE_STORY_LIMIT).map(async (id) => {
+                    const response = await fetch(`${HACKER_NEWS_API}item/${encodeURIComponent(id)}.json`, { cache: "no-store" });
+                    if (!response.ok) {
+                        throw new Error(`Hacker News returned HTTP ${response.status} for story ${id}.`);
+                    }
+                    const item = await response.json();
+                    if (!item || item.type !== "story" || !item.title || !Number.isFinite(item.time)) {
+                        return null;
+                    }
+
+                    let url = `https://news.ycombinator.com/item?id=${encodeURIComponent(item.id)}`;
+                    if (item.url) {
+                        try {
+                            const candidate = new URL(item.url);
+                            if (candidate.protocol === "https:" || candidate.protocol === "http:") {
+                                url = candidate.href;
+                            }
+                        } catch {
+                            // Keep the Hacker News discussion link when a story URL is malformed.
+                        }
+                    }
+                    return {
+                        title: item.title,
+                        url,
+                        date: new Date(item.time * 1000),
+                        tag: "Hacker News"
+                    };
+                }));
+                const validStories = stories.filter((story) => story && !Number.isNaN(story.date.getTime()));
+                if (validStories.length === 0) {
+                    throw new Error("Hacker News did not return any valid top stories. Please try again.");
+                }
+                return validStories;
+            }
+
+            async function fetchDigest(date) {
+                const response = await fetch(`./digests/${date}.md`, { cache: "no-store" });
+                if (response.status === 404) {
+                    return null;
+                }
+                if (!response.ok) {
+                    throw new Error(`The digest could not be loaded (HTTP ${response.status}).`);
+                }
+                return response.text();
+            }
+
+            async function findDigest(startDate, direction, limit, endDate = null) {
+                let date = startDate;
+                for (let offset = 0; offset < limit; offset += 1) {
+                    if (endDate && ((direction < 0 && date < endDate) || (direction > 0 && date > endDate))) {
+                        break;
+                    }
+                    const markdown = await fetchDigest(date);
+                    if (markdown) {
+                        return { date, markdown };
+                    }
+                    date = shiftDate(date, direction);
+                }
+                return null;
+            }
+
+            function sectionsFrom(markdown) {
+                const sections = new Map();
+                const headings = [...markdown.matchAll(/^##\s+(.+)$/gm)];
+                const firstHeading = headings[0];
+                const introduction = firstHeading ? markdown.slice(0, firstHeading.index) : markdown;
+                const executiveSummary = introduction
+                    .replace(/^#.*$/gm, "")
+                    .replace(/^---\s*$/gm, "")
+                    .trim()
+                    .split(/\n\s*\n/)
+                    .map((paragraph) => paragraph.trim())
+                    .find(Boolean) || "";
+
+                headings.forEach((heading, index) => {
+                    const start = heading.index + heading[0].length;
+                    const end = headings[index + 1]?.index ?? markdown.length;
+                    sections.set(heading[1].trim().toLowerCase(), markdown.slice(start, end).trim());
+                });
+                return { executiveSummary, sections };
+            }
+
+            function plainText(markdown) {
+                return markdown
+                    .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, "$1")
+                    .replace(/<[^>]*>/g, "")
+                    .replace(/[*_`>#]/g, "")
+                    .replace(/\s+/g, " ")
+                    .trim();
+            }
+
+            function itemsFrom(section) {
+                const blocks = section.split(/\n\s*\n/);
+                return blocks.flatMap((block) => {
+                    const match = block.match(/^\s*[-*]\s+\*\*(.+?)\*\*\s*([\s\S]*)$/);
+                    if (!match) {
+                        return [];
+                    }
+                    const sourceMatch = match[2].match(/\[Source Link\]\((https?:\/\/[^)]+)\)/i)
+                        || match[2].match(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/);
+                    const summary = plainText(match[2].replace(/\[Source Link\]\(https?:\/\/[^)]+\)/gi, ""));
+                    return [{
+                        title: plainText(match[1]),
+                        summary,
+                        source: sourceMatch ? sourceMatch[sourceMatch.length - 1] : ""
+                    }];
+                });
+            }
+
+            function appendEntry(container, item) {
+                const article = document.createElement("article");
+                article.className = "digest-entry";
+                article.dataset.searchText = `${item.title} ${item.summary}`.toLowerCase();
+
+                const title = document.createElement("h3");
+                title.className = "entry-title";
+                title.textContent = item.title;
+                article.append(title);
+
+                if (item.summary) {
+                    const summary = document.createElement("p");
+                    summary.className = "entry-summary";
+                    summary.textContent = item.summary;
+                    article.append(summary);
+                }
+
+                if (item.source) {
+                    const link = document.createElement("a");
+                    link.className = "entry-source";
+                    link.href = item.source;
+                    link.target = "_blank";
+                    link.rel = "noopener noreferrer";
+                    link.textContent = "Read source ↗";
+                    article.append(link);
+                }
+                container.append(article);
+            }
+
+            function renderStory(item) {
+                const article = document.createElement("article");
+                article.className = "digest-entry";
+                article.dataset.searchText = `${item.title} ${item.tag}`.toLowerCase();
+
+                const title = document.createElement("h3");
+                title.className = "entry-title";
+                const storyLink = document.createElement("a");
+                storyLink.className = "story-link";
+                storyLink.href = item.url;
+                storyLink.target = "_blank";
+                storyLink.rel = "noopener noreferrer";
+                storyLink.textContent = item.title;
+                title.append(storyLink);
+                article.append(title);
+
+                const metadata = document.createElement("div");
+                metadata.className = "story-meta";
+                const published = document.createElement("time");
+                published.dateTime = item.date.toISOString();
+                published.textContent = formatStoryDate(item.date);
+                const tag = document.createElement("span");
+                tag.className = "story-tag";
+                tag.textContent = item.tag;
+                metadata.append(published, tag);
+                article.append(metadata);
+                return article;
+            }
+
+            function showStoriesLoading() {
+                liveStories = [];
+                totalEntries = researchEntries.length;
+                elements.storiesContainer.replaceChildren();
+                const loading = document.createElement("div");
+                loading.className = "loading-state";
+                loading.setAttribute("role", "status");
+
+                const label = document.createElement("p");
+                label.className = "loading-label";
+                const spinner = document.createElement("span");
+                spinner.className = "loading-spinner";
+                spinner.setAttribute("aria-hidden", "true");
+                label.append(spinner, document.createTextNode("Fetching live stories from Hacker News…"));
+
+                const skeletons = document.createElement("div");
+                skeletons.className = "skeleton-stack";
+                skeletons.setAttribute("aria-hidden", "true");
+                for (let index = 0; index < 3; index += 1) {
+                    const line = document.createElement("span");
+                    line.className = "skeleton-line";
+                    skeletons.append(line);
+                }
+                loading.append(label, skeletons);
+                elements.storiesContainer.append(loading);
+            }
+
+            function showStoriesError(message) {
+                elements.storiesContainer.replaceChildren();
+                const errorPanel = document.createElement("div");
+                errorPanel.className = "feed-error";
+                const description = document.createElement("p");
+                description.textContent = message;
+                const retry = document.createElement("button");
+                retry.className = "retry-button";
+                retry.type = "button";
+                retry.textContent = "Retry";
+                retry.addEventListener("click", loadLiveStories);
+                errorPanel.append(description, retry);
+                elements.storiesContainer.append(errorPanel);
+            }
+
+            async function loadLiveStories() {
+                showStoriesLoading();
+                elements.liveStatus.textContent = "Loading live Hacker News stories";
+                try {
+                    liveStories = await fetchHackerNewsStories();
+                    totalEntries = liveStories.length + researchEntries.length;
+                    elements.storiesContainer.replaceChildren(...liveStories.map(renderStory));
+                    elements.liveStatus.textContent = `${liveStories.length} live Hacker News stories`;
+                    elements.footerTimestamp.textContent = `Live update ${new Intl.DateTimeFormat(undefined, {
+                        hour: "numeric",
+                        minute: "2-digit"
+                    }).format(new Date())}`;
+                    filterDigest(elements.search.value);
+                } catch (error) {
+                    liveStories = [];
+                    totalEntries = researchEntries.length;
+                    const message = error instanceof Error
+                        ? error.message
+                        : "An unexpected error prevented live stories from loading.";
+                    elements.liveStatus.textContent = "Live feed unavailable";
+                    showStoriesError(`${message} Check your connection and retry.`);
+                    filterDigest(elements.search.value);
+                }
+            }
+
+            function renderTakeaways(items) {
+                elements.takeaways.replaceChildren();
+                const takeaways = items.slice(0, 3);
+                takeaways.forEach((item) => {
+                    const takeaway = document.createElement("div");
+                    takeaway.className = "takeaway";
+                    takeaway.dataset.searchText = `${item.title} ${item.summary}`.toLowerCase();
+                    const mark = document.createElement("span");
+                    mark.className = "takeaway-mark";
+                    mark.setAttribute("aria-hidden", "true");
+                    mark.textContent = "↗";
+                    const text = document.createElement("span");
+                    text.textContent = item.title;
+                    takeaway.append(mark, text);
+                    elements.takeaways.append(takeaway);
+                });
+            }
+
+            function renderDigest(markdown, date) {
+                const { executiveSummary, sections } = sectionsFrom(markdown);
+                const news = itemsFrom(sections.get("hacker news") || "");
+                const research = itemsFrom(sections.get("arxiv research") || "");
+                const allItems = [...news, ...research];
+
+                elements.researchList.replaceChildren();
+                research.forEach((item) => appendEntry(elements.researchList, item));
+                researchEntries = research;
+                elements.executiveSummary.textContent = executiveSummary || "This edition's highlights are ready to explore below.";
+                elements.executiveSummary.dataset.searchText = executiveSummary.toLowerCase();
+                elements.summaryWrap.hidden = false;
+                renderTakeaways(allItems);
+
+                currentDate = date;
+                currentMarkdown = markdown;
+                totalEntries = liveStories.length + researchEntries.length;
+                elements.date.textContent = formatDate(date);
+                elements.copy.disabled = false;
+                elements.previous.disabled = false;
+                elements.latest.disabled = date === latestDate;
+                elements.search.value = "";
+                filterDigest("");
+            }
+
+            function filterDigest(query) {
+                const normalizedQuery = query.trim().toLowerCase();
+                const entries = [...document.querySelectorAll(".digest-entry, .takeaway")];
+                let visibleEntries = 0;
+                entries.forEach((entry) => {
+                    const matches = !normalizedQuery || entry.dataset.searchText.includes(normalizedQuery);
+                    entry.hidden = !matches;
+                    if (entry.classList.contains("digest-entry") && matches) {
+                        visibleEntries += 1;
+                    }
+                });
+
+                elements.newsEmpty.classList.toggle("is-visible", liveStories.length > 0
+                    && [...elements.storiesContainer.querySelectorAll(".digest-entry")].every((entry) => entry.hidden));
+                elements.researchEmpty.classList.toggle(
+                    "is-visible",
+                    elements.researchList.children.length > 0 && [...elements.researchList.children].every((entry) => entry.hidden)
+                );
+                const summaryMatches = !normalizedQuery
+                    || elements.executiveSummary.dataset.searchText.includes(normalizedQuery)
+                    || [...elements.takeaways.children].some((item) => !item.hidden);
+                elements.summaryWrap.hidden = !summaryMatches;
+                elements.resultsCount.textContent = normalizedQuery
+                    ? `${visibleEntries} matching ${visibleEntries === 1 ? "story" : "stories"}`
+                    : `${totalEntries} stories and research updates`;
+                elements.searchFeedback.textContent = normalizedQuery ? `Filtering for “${query.trim()}”` : "";
+            }
+
+            function showError(message) {
+                elements.loadNotice.textContent = message;
+                elements.loadNotice.classList.add("is-visible");
+            }
+
+            async function loadLatest() {
+                elements.loadNotice.classList.remove("is-visible");
+                try {
+                    const latest = await findDigest(dateString(new Date()), -1, MAX_LOOKBACK_DAYS);
+                    if (!latest) {
+                        throw new Error(`No digest was found in the last ${MAX_LOOKBACK_DAYS} days. Try again after a new edition is published.`);
+                    }
+                    latestDate = latest.date;
+                    renderDigest(latest.markdown, latest.date);
+                } catch (error) {
+                    showError(error instanceof Error ? error.message : "An unexpected error prevented the digest from loading.");
+                }
+            }
+
+            async function refreshDashboard() {
+                elements.refresh.disabled = true;
+                await Promise.all([loadLatest(), loadLiveStories()]);
+                elements.refresh.disabled = false;
+            }
+
+            async function loadPrevious() {
+                if (!currentDate) {
+                    return;
+                }
+                elements.previous.disabled = true;
+                try {
+                    const previous = await findDigest(shiftDate(currentDate, -1), -1, MAX_HISTORY_DAYS);
+                    if (!previous) {
+                        throw new Error("No earlier digest was found in the available history.");
+                    }
+                    renderDigest(previous.markdown, previous.date);
+                } catch (error) {
+                    showError(error instanceof Error ? error.message : "An unexpected error prevented the previous digest from loading.");
+                } finally {
+                    elements.previous.disabled = false;
+                }
+            }
+
+            async function loadLatestEdition() {
+                if (!latestDate || !currentDate || currentDate === latestDate) {
+                    return;
+                }
+                elements.latest.disabled = true;
+                try {
+                    const next = await findDigest(shiftDate(currentDate, 1), 1, MAX_HISTORY_DAYS, latestDate);
+                    if (!next) {
+                        throw new Error("The latest digest could not be found in the available history.");
+                    }
+                    renderDigest(next.markdown, next.date);
+                } catch (error) {
+                    showError(error instanceof Error ? error.message : "An unexpected error prevented the latest digest from loading.");
+                } finally {
+                    elements.latest.disabled = currentDate === latestDate;
+                }
+            }
+
+            async function copyDigest() {
+                const buttonText = elements.copy.innerHTML;
+                try {
+                    if (!navigator.clipboard?.writeText) {
+                        throw new Error("Clipboard access is unavailable in this browser. Open the page over HTTPS and try again.");
+                    }
+                    const liveSection = liveStories.length
+                        ? `\n\n## Live Hacker News Stories\n\n${liveStories.map((story) => `- [${story.title}](${story.url}) — ${formatStoryDate(story.date)}`).join("\n")}`
+                        : "";
+                    await navigator.clipboard.writeText(`${currentMarkdown}${liveSection}`);
+                    elements.copy.innerHTML = "<span aria-hidden=\"true\">✓</span> Copied";
+                    window.setTimeout(() => {
+                        elements.copy.innerHTML = buttonText;
+                    }, 1800);
+                } catch (error) {
+                    elements.loadNotice.textContent = error instanceof Error ? error.message : "The digest could not be copied.";
+                    elements.loadNotice.classList.add("is-visible");
+                }
+            }
+
+            elements.search.addEventListener("input", (event) => filterDigest(event.target.value));
+            elements.refresh.addEventListener("click", refreshDashboard);
+            elements.previous.addEventListener("click", loadPrevious);
+            elements.latest.addEventListener("click", loadLatestEdition);
+            elements.copy.addEventListener("click", copyDigest);
+            showStoriesLoading();
+            loadLatest();
+            loadLiveStories();
+        })();
+    </script>
 </body>
 </html>
