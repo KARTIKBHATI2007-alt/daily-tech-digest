@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live Tech Engine — Daily Tech Digest</title>
+  <title>Live Tech Search Engine — Daily Tech Digest</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #090d16;
@@ -51,9 +51,7 @@
       border: 1px solid rgba(52, 211, 153, 0.2);
     }
 
-    .search-container {
-      margin-bottom: 1.5rem;
-    }
+    .search-container { margin-bottom: 1.5rem; }
 
     .search-box-wrap {
       display: flex;
@@ -91,11 +89,7 @@
 
     .btn:hover { opacity: 0.9; }
 
-    .hashtags {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
+    .hashtags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
     .tag-btn {
       background: rgba(30, 41, 59, 0.6);
@@ -109,10 +103,7 @@
       transition: 0.2s;
     }
 
-    .tag-btn:hover {
-      background: var(--accent);
-      color: #000;
-    }
+    .tag-btn:hover { background: var(--accent); color: #000; }
 
     .grid {
       display: grid;
@@ -149,12 +140,7 @@
     .card-snippet { font-size: 0.88rem; color: var(--muted); margin-bottom: 1rem; line-height: 1.5; }
     .card-link { color: var(--accent); text-decoration: none; font-size: 0.85rem; font-weight: 600; }
 
-    .loader {
-      text-align: center;
-      padding: 3rem;
-      color: var(--muted);
-      grid-column: 1 / -1;
-    }
+    .loader { text-align: center; padding: 3rem; color: var(--muted); grid-column: 1 / -1; }
 
     footer {
       text-align: center;
@@ -171,12 +157,12 @@
   <div class="container">
     <header>
       <div class="brand">⚡ Live Tech Search Engine</div>
-      <div class="status-badge">● Live Web Query Stream</div>
+      <div class="status-badge">● Live Web Stream Active</div>
     </header>
 
     <div class="search-container">
       <div class="search-box-wrap">
-        <input type="text" id="searchInput" class="search-input" placeholder="Search topic (e.g. LLM, Tesla, AI, React, Cybersecurity)..." onkeydown="if(event.key==='Enter') executeLiveSearch()">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search topic (e.g. LLM, Tesla, AI, WebDev)..." onkeydown="if(event.key==='Enter') executeLiveSearch()">
         <button class="btn" onclick="executeLiveSearch()">Search News</button>
       </div>
 
@@ -185,13 +171,13 @@
         <button class="tag-btn" onclick="quickSearch('AI')">#AI</button>
         <button class="tag-btn" onclick="quickSearch('LLM')">#LLM</button>
         <button class="tag-btn" onclick="quickSearch('Tesla')">#Tesla</button>
-        <button class="tag-btn" onclick="quickSearch('Web Dev')">#WebDev</button>
+        <button class="tag-btn" onclick="quickSearch('WebDev')">#WebDev</button>
         <button class="tag-btn" onclick="quickSearch('Cybersecurity')">#Cybersecurity</button>
       </div>
     </div>
 
     <div id="resultsGrid" class="grid">
-      <div class="loader">Type a topic above or click a hashtag to search live web news...</div>
+      <div class="loader">Loading live tech updates...</div>
     </div>
 
     <footer>
@@ -208,35 +194,43 @@
       grid.innerHTML = `<div class="loader">Searching live news for "<b>${query}</b>"...</div>`;
 
       try {
-        // Fetching live web search results via RSS-to-JSON engine
-        const rssUrl = encodeURIComponent(`https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=en-US&gl=US&ceid=US:en`);
-        const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`);
-        const data = await res.json();
+        // Reliable CORS Proxy + Google News RSS Fetching
+        const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=en-US&gl=US&ceid=US:en`;
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
+        
+        const response = await fetch(proxyUrl);
+        const data = await response.json();
+        
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(data.contents, "text/xml");
+        const items = Array.from(xmlDoc.querySelectorAll("item"));
 
-        if (data.status === 'ok' && data.items.length > 0) {
-          renderSearchResults(data.items, query);
+        if (items.length > 0) {
+          renderSearchResults(items, query);
         } else {
-          grid.innerHTML = `<div class="loader">No live news found for "${query}". Try another topic.</div>`;
+          grid.innerHTML = `<div class="loader">No live news found for "${query}". Try another term.</div>`;
         }
       } catch (err) {
-        grid.innerHTML = `<div class="loader" style="color: #ef4444;">Failed to fetch live search results. Check network connection.</div>`;
+        console.error(err);
+        grid.innerHTML = `<div class="loader" style="color: #ef4444;">Failed to load live search results. Please try again.</div>`;
       }
     }
 
     function renderSearchResults(items, query) {
       const grid = document.getElementById('resultsGrid');
       grid.innerHTML = items.slice(0, 12).map(item => {
-        const cleanSnippet = item.description ? item.description.replace(/<[^>]*>?/gm, '').slice(0, 140) + '...' : 'Click to read full story source.';
-        const pubDate = new Date(item.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const title = item.querySelector("title")?.textContent || "No Title";
+        const link = item.querySelector("link")?.textContent || "#";
+        const pubDateText = item.querySelector("pubDate")?.textContent;
+        const pubDate = pubDateText ? new Date(pubDateText).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recent';
 
         return `
           <div class="card">
             <div>
               <div class="card-hashtag">#${query.toUpperCase().replace(/\s+/g, '')} • ${pubDate}</div>
-              <div class="card-title">${item.title}</div>
-              <div class="card-snippet">${cleanSnippet}</div>
+              <div class="card-title">${title}</div>
             </div>
-            <a href="${item.link}" target="_blank" class="card-link">Read Story Source →</a>
+            <a href="${link}" target="_blank" rel="noopener" class="card-link">Read Source Article →</a>
           </div>
         `;
       }).join('');
@@ -247,7 +241,7 @@
       executeLiveSearch();
     }
 
-    // Default Initial Search on load
+    // Default Load
     quickSearch('AI');
   </script>
 </body>
